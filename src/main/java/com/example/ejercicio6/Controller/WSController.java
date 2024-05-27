@@ -40,14 +40,32 @@ public class WSController {
         String error = limit>20  ? "error" : "";
 
         if(error.equals("")){
-            List<Character> charac =  characterRepository.megaFiltrado(search_attr,'%'+search_text+'%',sort_attr,sort_type,limit,page*limit );
+            List<Character> characTodo =  characterRepository.megaFiltradoSinPaginacion(search_attr,'%'+search_text+'%',sort_attr,sort_type);
+            List<Character> charac =  characterRepository.megaFiltrado(search_attr,'%'+search_text+'%',sort_attr,sort_type,limit,page*limit -1 );
+            responseJson.put("numberOfElements", charac.size());
+            responseJson.put("first", page==1);
+            HashMap<String, Object> aux =  new HashMap<>();
+            aux.put("unsorted", false);
+            aux.put("sorted", true);
+            responseJson.put("sort",aux);
+            responseJson.put("number", 0);
+            responseJson.put("size", limit);
+            responseJson.put("totalPages", characTodo.size()/20 );
+            responseJson.put("totalElements", characTodo.size());
+            responseJson.put("last", page==characTodo.size()/20);
+            HashMap<String, Object> aux2 =  new HashMap<>();
+            aux2.put("unpaged", false);
+            aux2.put("paged", true);
+            aux2.put("pageNumber", true);
+            aux2.put("pageSize", true);
+            aux2.put("offset", true);
+            aux2.put("sort", aux);
             responseJson.put("content", charac);
-            responseJson.put("pageable", charac);
             return ResponseEntity.ok(responseJson);
         }else{
             HashMap<String, Object> err = new HashMap<>();
             err.put("error","limite invalido, debe ser menor a 20");
-            err.put("date",""+LocalDate.now());
+            err.put("date",""+LocalDateTime.now());
             return ResponseEntity.badRequest().body(err);
         }
     }
@@ -76,6 +94,8 @@ public class WSController {
             return ResponseEntity.badRequest().body(jsonResponse);
         }
     }
+
+    /*
     @PostMapping(value = "/ws/personaje/save")
     public ResponseEntity<HashMap<String,Object>> guardar(@RequestParam(value = "id",required = false)String idStr,
                                                           @RequestParam("name")String name,
@@ -126,5 +146,7 @@ public class WSController {
             return ResponseEntity.badRequest().body(jsonResponse);
         }
     }
+
+     */
 
 }

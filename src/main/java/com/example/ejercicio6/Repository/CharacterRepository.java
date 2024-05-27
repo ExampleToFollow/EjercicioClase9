@@ -35,5 +35,9 @@ public interface CharacterRepository extends JpaRepository<Character,Integer> {
     @Query(nativeQuery = true, value = "select * from characters where ?1 like ?2 order by ?3 ?4 LIMIT ?5 OFFSET ?6;")
     List<Character> megaFiltrado(String parametroFiltrado , String textoBusqueda , String parametroOrden , String criterioOrden , int limit, int offset);
 
+    @Query(nativeQuery = true, value = "select * from characters where ?1 like ?2 order by ?3 ?4;")
+    List<Character> megaFiltradoSinPaginacion(String parametroFiltrado , String textoBusqueda , String parametroOrden , String criterioOrden );
+
+
 
 }
