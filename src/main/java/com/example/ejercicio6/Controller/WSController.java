@@ -76,5 +76,55 @@ public class WSController {
             return ResponseEntity.badRequest().body(jsonResponse);
         }
     }
+    @PostMapping(value = "/ws/personaje/save")
+    public ResponseEntity<HashMap<String,Object>> guardar(@RequestParam(value = "id",required = false)String idStr,
+                                                          @RequestParam("name")String name,
+                                                          @RequestParam("url")String url,
+                                                          @RequestParam("identity")String identity,
+                                                          @RequestParam("align")String align,
+                                                          @RequestParam("eye")String eye,
+                                                          @RequestParam("hair")String hair,
+                                                          @RequestParam("sex")String sex,
+                                                          @RequestParam("gsm")String gsm,
+                                                          @RequestParam("alive")String alive,
+                                                          @RequestParam("appearances")String appearancesStr,
+                                                          @RequestParam("firstAppearance")String firstAppearance,
+                                                          @RequestParam("year")String yearStr) {
+
+        HashMap<String, Object> jsonResponse = new HashMap<>();
+        try {
+            if (idStr != null) {
+                Integer id = Integer.parseInt(idStr);
+                Optional<Character> optionalCharacter = characterRepository.findById(id);
+                if (optionalCharacter.isPresent()) {
+                    Integer appearances = Integer.parseInt(appearancesStr);
+                    Integer year = Integer.parseInt(yearStr);
+                    characterRepository.editarPersonaje(name, url, identity, align, eye, hair, sex, gsm, alive, appearances, firstAppearance, year, id);
+                    Optional<Character> personajeActualizado = characterRepository.findById(id);
+                    jsonResponse.put("objeto", personajeActualizado.get());
+                    return ResponseEntity.ok(jsonResponse);
+                } else {
+                    Integer appearances = Integer.parseInt(appearancesStr);
+                    Integer year = Integer.parseInt(yearStr);
+                    characterRepository.crearPersonaje(name, url, identity, align, eye, hair, sex, gsm, alive, appearances, firstAppearance, year);
+                    Character personajeCreado = characterRepository.ultimoPersonaje();
+                    jsonResponse.put("objeto", personajeCreado);
+                    return ResponseEntity.ok(jsonResponse);
+                }
+            } else {
+                Integer appearances = Integer.parseInt(appearancesStr);
+                Integer year = Integer.parseInt(yearStr);
+                characterRepository.crearPersonaje(name, url, identity, align, eye, hair, sex, gsm, alive, appearances, firstAppearance, year);
+                Character personajeCreado = characterRepository.ultimoPersonaje();
+                jsonResponse.put("objeto", personajeCreado);
+                return ResponseEntity.ok(jsonResponse);
+            }
+        } catch (NumberFormatException e) {
+            jsonResponse.put("error", "Error en validación de datos");
+            String horaActual = LocalDateTime.now().toString();
+            jsonResponse.put("date", horaActual);
+            return ResponseEntity.badRequest().body(jsonResponse);
+        }
+    }
 
 }

@@ -138,4 +138,9 @@ public class CharacterController {
         }
         return "redirect:/personaje/list";
     }
+
+
+
+
+
 }
