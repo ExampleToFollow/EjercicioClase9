@@ -4,15 +4,13 @@ import com.example.ejercicio6.Entity.Character;
 import com.example.ejercicio6.Repository.CharacterRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
-@Controller
-@RequestMapping("/ws")
+@RestController
 public class WSController {
     //Crear rest server
     final CharacterRepository characterRepository;
@@ -20,15 +18,27 @@ public class WSController {
     public WSController(CharacterRepository characterRepository){
         this.characterRepository = characterRepository;
     }
-    @ResponseBody
+
     @GetMapping(value = "/ws/personaje/list")
-    public List<Character> listCharacters (
-                                           @RequestParam(value = "busqueda",required = false) String busqueda){
-        if(busqueda==null){
-            return characterRepository.findAll();
-        }else{
-            return  characterRepository.findByNameIgnoreCaseContaining('%'+busqueda+'%');
-        }
+    public List<Character> listCharacters (@RequestParam("page") int page ,
+                                           @RequestParam("sort_attr") String sort_attr ,
+                                           @RequestParam("sort_type") String sort_attr,
+                                           @RequestParam("sort_attr") String sort_attr,
+
+
+
+    ){
+        HashSet<Character> primerFiltro  = new HashSet<>();
+        primerFiltro= characterRepository.findByNameIgnoreCaseContaining('%'+busqueda+'%');
+        HashSet<Character> segundoFiltro  = new HashSet<>();
+        HashSet<Character> tercerFiltro  = new HashSet<>();
+        HashSet<Character> cuartoFiltro  = new HashSet<>();
+        HashSet<Character> quintoFiltro  = new HashSet<>();
+        HashSet<Character> sextoFiltro  = new HashSet<>();
+
+
+        return characterRepository.findAll();
     }
+    //PARA QUE JOSH TRABAJE :
 
 }
