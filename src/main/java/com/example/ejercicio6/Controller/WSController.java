@@ -4,6 +4,7 @@ import com.example.ejercicio6.Entity.Character;
 import com.example.ejercicio6.Repository.CharacterRepository;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -95,8 +96,7 @@ public class WSController {
         }
     }
 
-    /*
-    @PostMapping(value = "/ws/personaje/save")
+    @PostMapping(value = "/ws/personaje/save/")
     public ResponseEntity<HashMap<String,Object>> guardar(@RequestParam(value = "id",required = false)String idStr,
                                                           @RequestParam("name")String name,
                                                           @RequestParam("url")String url,
@@ -147,6 +147,38 @@ public class WSController {
         }
     }
 
-     */
+
+    @GetMapping(value = "/ws/personaje/get/{id}")
+    public ResponseEntity<HashMap<String,Object>> guardar(@PathVariable("id")String idStr){
+        HashMap<String, Object> jsonResponse=new HashMap<>();
+        try{
+            if(idStr!=null){
+                Integer id=Integer.parseInt(idStr);
+                Optional<Character> optionalCharacter = characterRepository.findById(id);
+                if(optionalCharacter.isPresent()){
+                    Optional<Character> personajeActualizado=characterRepository.findById(id);
+                    jsonResponse.put("objeto",personajeActualizado.get());
+                    return ResponseEntity.ok(jsonResponse);
+                }else {
+                    jsonResponse.put("error","ID Personaje NO encontrado");
+                    String horaActual=LocalDateTime.now().toString();
+                    jsonResponse.put("date",horaActual);
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonResponse);
+                }
+            }else {
+                jsonResponse.put("error","ID Personaje NO válido");
+                String horaActual=LocalDateTime.now().toString();
+                jsonResponse.put("date",horaActual);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonResponse);
+            }
+        }catch (NumberFormatException e){
+            jsonResponse.put("error","Error en validación de datos");
+            String horaActual=LocalDateTime.now().toString();
+            jsonResponse.put("date",horaActual);
+            return ResponseEntity.badRequest().body(jsonResponse);
+        }
+    }
+
+
 
 }

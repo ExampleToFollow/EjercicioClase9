@@ -1,6 +1,8 @@
 package com.example.ejercicio6.Repository;
 import com.example.ejercicio6.Entity.Character;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -38,6 +40,19 @@ public interface CharacterRepository extends JpaRepository<Character,Integer> {
     @Query(nativeQuery = true, value = "select * from characters where ?1 like ?2 order by ?3 ?4;")
     List<Character> megaFiltradoSinPaginacion(String parametroFiltrado , String textoBusqueda , String parametroOrden , String criterioOrden );
 
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true,value = "insert into characters(name, url, identity, align, eye, hair, sex, gsm, alive, appearances, first_appearance, year) values(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12)")
+    void crearPersonaje(String name, String url, String identity, String align, String eye, String hair, String sex, String gsm, String alive, Integer appearances, String firstAppearance, Integer year);
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true,value = "update characters set name=?1,url=?2,identity=?3,align=?4,eye=?5,hair=?6,sex=?7,gsm=?8,alive=?9,appearances=?10,first_appearance=?11,year=?12 where id=?13")
+    void editarPersonaje(String name, String url, String identity, String align, String eye, String hair, String sex, String gsm, String alive, Integer appearances, String firstAppearance, Integer year,Integer id);
+
+    @Query(nativeQuery = true,value = "select * from characters order by id desc limit 1")
+    Character ultimoPersonaje();
 
 
 }
