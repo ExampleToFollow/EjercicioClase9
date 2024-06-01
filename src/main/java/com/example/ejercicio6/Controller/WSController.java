@@ -4,9 +4,11 @@ import com.example.ejercicio6.Entity.Character;
 import com.example.ejercicio6.Repository.CharacterRepository;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,6 +28,11 @@ public class WSController {
         private String error;
         private LocalDateTime  date ;
     }
+
+
+
+
+
     @GetMapping(value = "/ws/personaje/list")
     public ResponseEntity<HashMap<String, Object>> listCharacters (@RequestParam(value = "page",required = false,defaultValue ="1") Integer page ,
                                                                    @RequestParam(value = "sort_attr", required = false, defaultValue="id") String sort_attr ,
@@ -34,6 +41,9 @@ public class WSController {
                                                                    @RequestParam(value = "search_attr",required = false, defaultValue = "name") String search_attr,
                                                                    @RequestParam(value = "search_text",required = false, defaultValue = "") String search_text
     ){
+
+
+
         HashMap<String, Object> responseJson = new HashMap<>();
         HashMap<String, Object> pageable = new HashMap<>();
         //Definimos valores por defecto
@@ -177,6 +187,7 @@ public class WSController {
             jsonResponse.put("date",horaActual);
             return ResponseEntity.badRequest().body(jsonResponse);
         }
+
     }
 
 

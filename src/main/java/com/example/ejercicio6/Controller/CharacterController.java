@@ -3,6 +3,11 @@ package com.example.ejercicio6.Controller;
 import com.example.ejercicio6.Entity.Character;
 import com.example.ejercicio6.Repository.CharacterRepository;
 import jakarta.validation.Valid;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,10 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class CharacterController {
@@ -22,6 +27,65 @@ public class CharacterController {
     public CharacterController(CharacterRepository characterRepository){
         this.characterRepository = characterRepository;
     }
+
+
+
+    public List<Character> listarCharacter(){
+
+        RestTemplate restTemplate = new RestTemplateBuilder()
+                .basicAuthentication("thanos@marvel.com","ola")
+                .basicAuthentication("ironman@marvel.com","ola")
+                .basicAuthentication("spiderman@marvel.com","ola")
+                .build();
+
+        ResponseEntity<Character[]> response = restTemplate.getForEntity("http://localhost:8080/ws/personaje/list",Character[].class);
+
+        return Arrays.asList(response.getBody());
+    }
+
+
+
+    public Character getCharacter(int id){
+
+        RestTemplate restTemplate = new RestTemplateBuilder()
+                .basicAuthentication("thanos@marvel.com","ola")
+                .basicAuthentication("ironman@marvel.com","ola")
+                .basicAuthentication("spiderman@marvel.com","ola")
+                .build();
+
+        ResponseEntity<Character> response = restTemplate.getForEntity("http://localhost:8080/ws/personaje/get/"+id,Character.class);
+
+        return response.getBody();
+    }
+
+
+    public void saveCharacter(Character character) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Character> httpEntity = new HttpEntity<>(character,headers);
+
+        RestTemplate restTemplate = new RestTemplateBuilder()
+                .basicAuthentication("thanos@marvel.com","ola")
+                .basicAuthentication("ironman@marvel.com","ola")
+                .build();
+
+        restTemplate.postForEntity("http://localhost:8080/ws/personaje/save/",httpEntity,Character.class);
+
+    }
+
+
+    public void deleteCharacter(int id){
+
+        RestTemplate restTemplate = new RestTemplateBuilder()
+                .basicAuthentication("thanos@marvel.com","ola")
+                .build();
+
+        restTemplate.delete("/ws/personaje/delete/"+id);
+
+    }
+
 
     @GetMapping(value = "/personaje/list")
     public String listar(Model model,
