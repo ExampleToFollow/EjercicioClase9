@@ -33,9 +33,9 @@ public class CharacterController {
     public List<Character> listarCharacter(){
 
         RestTemplate restTemplate = new RestTemplateBuilder()
-                .basicAuthentication("thanos@marvel.com","ola")
-                .basicAuthentication("ironman@marvel.com","ola")
-                .basicAuthentication("spiderman@marvel.com","ola")
+                .basicAuthentication("thanos@marvel.com","thanos")
+                .basicAuthentication("ironman@marvel.com","ironman")
+                .basicAuthentication("spiderman@marvel.com","spiderman")
                 .build();
 
         ResponseEntity<Character[]> response = restTemplate.getForEntity("http://localhost:8080/ws/personaje/list",Character[].class);
@@ -48,9 +48,9 @@ public class CharacterController {
     public Character getCharacter(int id){
 
         RestTemplate restTemplate = new RestTemplateBuilder()
-                .basicAuthentication("thanos@marvel.com","ola")
-                .basicAuthentication("ironman@marvel.com","ola")
-                .basicAuthentication("spiderman@marvel.com","ola")
+                .basicAuthentication("thanos@marvel.com","thanos")
+                .basicAuthentication("ironman@marvel.com","ironman")
+                .basicAuthentication("spiderman@marvel.com","spiderman")
                 .build();
 
         ResponseEntity<Character> response = restTemplate.getForEntity("http://localhost:8080/ws/personaje/get/"+id,Character.class);
@@ -67,8 +67,8 @@ public class CharacterController {
         HttpEntity<Character> httpEntity = new HttpEntity<>(character,headers);
 
         RestTemplate restTemplate = new RestTemplateBuilder()
-                .basicAuthentication("thanos@marvel.com","ola")
-                .basicAuthentication("ironman@marvel.com","ola")
+                .basicAuthentication("thanos@marvel.com","thanos")
+                .basicAuthentication("ironman@marvel.com","ironman")
                 .build();
 
         restTemplate.postForEntity("http://localhost:8080/ws/personaje/save/",httpEntity,Character.class);
@@ -79,7 +79,7 @@ public class CharacterController {
     public void deleteCharacter(int id){
 
         RestTemplate restTemplate = new RestTemplateBuilder()
-                .basicAuthentication("thanos@marvel.com","ola")
+                .basicAuthentication("thanos@marvel.com","thanos")
                 .build();
 
         restTemplate.delete("/ws/personaje/delete/"+id);
